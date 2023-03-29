@@ -1,6 +1,5 @@
 package com.thevirtugroup.postitnote.config;
 
-import com.thevirtugroup.postitnote.repository.UserRepository;
 import com.thevirtugroup.postitnote.security.CustomAuthenticationSuccessHandler;
 import com.thevirtugroup.postitnote.security.JsonAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +28,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(authenticationFilter(),
                         UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .anyRequest().permitAll()
+                .antMatchers("/api/notes/**").authenticated()
                 .and()
                 .logout()
                 .and()
                 .csrf().disable()
-                .httpBasic()
-        ;
+                .httpBasic();
     }
 
     @Bean
@@ -53,7 +51,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public CustomAuthenticationSuccessHandler successHandler() {
         return new CustomAuthenticationSuccessHandler();
     }
-
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {

@@ -1,13 +1,12 @@
 package com.thevirtugroup.postitnote.repository;
 
-
 import com.thevirtugroup.postitnote.model.User;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserRepository {
 
-    private User defaultUser;
+    private final User defaultUser;
 
     public UserRepository() {
         defaultUser = new User();
@@ -17,19 +16,18 @@ public class UserRepository {
         defaultUser.setUsername("user");
     }
 
-    public User findUserByUsername(String username){
-        if ("user".equals(username)){
+    public User findUserByUsername(String username) {
+        if ("user".equals(username)) {
             return defaultUser;
         }
         return null;
     }
 
-    public User findById(Long id){
-        if (defaultUser.getId().equals(id)){
+    public User findById(Long id) {
+        if (defaultUser.getId().equals(id)) {
             return defaultUser;
         }
         return null;
     }
-
 
 }
