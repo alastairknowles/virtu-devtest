@@ -1,6 +1,7 @@
 (function () {
 
-    let app = angular.module('notesApp', ['ngRoute', 'ngMaterial']);
+    let app = angular.module('notesApp',
+        ['ngRoute', 'ngMaterial', 'ngStorage']);
 
     app.config(['$locationProvider', '$routeProvider',
         function ($locationProvider, $routeProvider) {
@@ -18,8 +19,8 @@
         }
     ]);
 
-    app.run(['$rootScope', '$location', 'AuthService',
-        function ($rootScope, $location, AuthService) {
+    app.run(['$rootScope', '$location', '$sessionStorage', 'AuthService',
+        function ($rootScope, $location, $sessionStorage, AuthService) {
             $rootScope.$on('$routeChangeStart', function (event) {
 
                 if ($location.path() === "/login") {
@@ -32,27 +33,39 @@
                     $location.path('/login');
                 }
             });
+
+            $rootScope.isLoggedIn = function () {
+                return AuthService.isLoggedIn()
+            }
+
+            $rootScope.logout = function () {
+                AuthService.logout();
+                $location.path('/login');
+            }
         }]);
 
-    app.service('AuthService', function ($http) {
-        let loggedUser = null;
-
+    app.service('AuthService', function ($http, $sessionStorage) {
         function login(username, password) {
             return $http.post("api/login",
                 {username: username, password: password}).then(function (user) {
-                loggedUser = user;
+                $sessionStorage.loggedUser = user;
             }, function (error) {
-                loggedUser = null;
-                throw error
+                $sessionStorage.loggedUser = null;
+                throw error;
             })
         }
 
+        function logout() {
+            $sessionStorage.loggedUser = null;
+        }
+
         function isLoggedIn() {
-            return loggedUser != null;
+            return $sessionStorage.loggedUser != null;
         }
 
         return {
             login: login,
+            logout: logout,
             isLoggedIn: isLoggedIn
         }
     });
