@@ -43,6 +43,7 @@
                 loggedUser = user;
             }, function (error) {
                 loggedUser = null;
+                throw error
             })
         }
 

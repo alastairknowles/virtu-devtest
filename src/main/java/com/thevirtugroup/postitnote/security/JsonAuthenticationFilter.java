@@ -80,5 +80,7 @@ public class JsonAuthenticationFilter extends UsernamePasswordAuthenticationFilt
         public void setPassword(String password) {
             this.password = password;
         }
+
     }
+
 }

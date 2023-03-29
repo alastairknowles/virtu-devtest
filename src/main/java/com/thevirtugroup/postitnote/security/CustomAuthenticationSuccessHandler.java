@@ -3,15 +3,14 @@ package com.thevirtugroup.postitnote.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thevirtugroup.postitnote.model.User;
 import com.thevirtugroup.postitnote.repository.UserRepository;
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
 
 public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
@@ -24,7 +23,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             HttpServletRequest request,
             HttpServletResponse response,
             Authentication auth
-    )throws IOException, ServletException {
+    ) throws IOException {
         writeResponse(response);
     }
 
@@ -41,7 +40,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         return fetchUser(loggedInUser.getId());
     }
 
-    private User fetchUser(Long id){
+    private User fetchUser(Long id) {
         Objects.requireNonNull(id);
         return Optional.ofNullable(userRepo.findById(id)).orElseThrow(() -> new IllegalArgumentException("User id not found " + id));
     }
