@@ -1,97 +1,100 @@
-(function(){
+(function () {
 
-  var app = angular.module('notesApp',['ngRoute', 'ngMaterial']);
+    let app = angular.module('notesApp', ['ngRoute', 'ngMaterial']);
 
-  app.config(['$locationProvider', '$routeProvider',
-      function ($locationProvider, $routeProvider) {
+    app.config(['$locationProvider', '$routeProvider',
+        function ($locationProvider, $routeProvider) {
 
-        $routeProvider
-          .when('/', {
-            templateUrl: '/partials/notes-view.html',
-            controller: 'notesController'
-          })
-          .when('/login', {
-             templateUrl: '/partials/login.html',
-             controller: 'loginController',
-          })
-          .otherwise('/');
-      }
-  ]);
+            $routeProvider
+            .when('/', {
+                templateUrl: '/partials/notes-view.html',
+                controller: 'notesController'
+            })
+            .when('/login', {
+                templateUrl: '/partials/login.html',
+                controller: 'loginController',
+            })
+            .otherwise('/');
+        }
+    ]);
 
-  app.run(['$rootScope', '$location', 'AuthService', function ($rootScope, $location, AuthService) {
-      $rootScope.$on('$routeChangeStart', function (event) {
+    app.run(['$rootScope', '$location', 'AuthService',
+        function ($rootScope, $location, AuthService) {
+            $rootScope.$on('$routeChangeStart', function (event) {
 
-          if ($location.path() == "/login"){
-             return;
-          }
+                if ($location.path() === "/login") {
+                    return;
+                }
 
-          if (!AuthService.isLoggedIn()) {
-              console.log('DENY');
-              event.preventDefault();
-              $location.path('/login');
-          }
-      });
-  }]);
+                if (!AuthService.isLoggedIn()) {
+                    console.log('DENY');
+                    event.preventDefault();
+                    $location.path('/login');
+                }
+            });
+        }]);
 
+    app.service('AuthService', function ($http) {
+        let loggedUser = null;
 
-  app.service('AuthService', function($http){
-        var loggedUser = null;
-
-        function login (username, password){
-            return $http.post("api/login", {username: username, password: password}).then(function(user){
+        function login(username, password) {
+            return $http.post("api/login",
+                {username: username, password: password}).then(function (user) {
                 loggedUser = user;
-            }, function(error){
+            }, function (error) {
                 loggedUser = null;
             })
         }
 
-        function isLoggedIn(){
+        function isLoggedIn() {
             return loggedUser != null;
         }
+
         return {
-            login : login,
+            login: login,
             isLoggedIn: isLoggedIn
         }
-  });
+    });
 
-  app.controller('loginController', function($scope, AuthService, $location){
+    app.controller('loginController',
+        function ($scope, AuthService, $location) {
 
-    $scope.invalidCreds = false;
-    $scope.login = {
-        username : null,
-        password : null
-    };
+            $scope.invalidCreds = false;
+            $scope.login = {
+                username: null,
+                password: null
+            };
 
-    $scope.login = function(){
-        AuthService.login($scope.login.username, $scope.login.password).then(function(user){
-            console.log(user);
-            $location.path("/");
-        }, function(error){
-            console.log(error);
-            $scope.invalidCreds = true;
+            $scope.login = function () {
+                AuthService.login($scope.login.username,
+                    $scope.login.password).then(function (user) {
+                    console.log(user);
+                    $location.path("/");
+                }, function (error) {
+                    console.log(error);
+                    $scope.invalidCreds = true;
+                });
+            };
         });
-    };
-  });
 
+    app.controller('notesController', function ($scope) {
 
-  app.controller('notesController', function($scope){
+        $scope.isEditCreateView = false;
 
-    $scope.isEditCreateView = false;
+        $scope.newNoteView = function () {
+            $scope.isEditCreateView = true;
+        };
 
-    $scope.newNoteView = function(){
-        $scope.isEditCreateView = true;
-    };
+        $scope.deleteNote = function (i) {
+            let prompt = confirm("Are you sure you want to delete this note?");
+            if (prompt) {
+                //TODO delete the note
+            }
+        };
 
-    $scope.deleteNote = function (i) {
-      var r = confirm("Are you sure you want to delete this note?");
-      if (r == true){
-        //TODO delete the note
-      }
-    };
-
-    $scope.viewNote = function(){
-        //TODO
-    }
-  });
+        $scope.viewNote = function () {
+            //TODO
+        }
+    });
 
 })();
