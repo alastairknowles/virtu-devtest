@@ -22,7 +22,7 @@ public class NoteRepositoryTest {
     @Test
     public void shouldCreateNote() {
         // Given
-        Note note = new Note("name", "text");
+        Note note = new Note("text");
 
         // When
         Note created = noteRepository.createNote(1, note);
@@ -42,9 +42,9 @@ public class NoteRepositoryTest {
     @Test
     public void shouldGetNotes() {
         // Given
-        Note note1 = noteRepository.createNote(1, new Note("name1", "text1"));
-        Note note2 = noteRepository.createNote(1, new Note("name2", "text2"));
-        Note note3 = noteRepository.createNote(2, new Note("name3", "text3"));
+        Note note1 = noteRepository.createNote(1, new Note("text1"));
+        Note note2 = noteRepository.createNote(1, new Note("text2"));
+        Note note3 = noteRepository.createNote(2, new Note("text3"));
 
         // When
         Map<UUID, Note> user1Notes = noteRepository.getNotes(1);
@@ -60,10 +60,10 @@ public class NoteRepositoryTest {
     @Test
     public void shouldUpdateNote() {
         // Given
-        Note created = noteRepository.createNote(1, new Note("name1", "text1"));
+        Note created = noteRepository.createNote(1, new Note("text1"));
 
         // When
-        Note updated = noteRepository.updateNote(1, created.getId(), new Note("name2", "text2"));
+        Note updated = noteRepository.updateNote(1, created.getId(), new Note("text2"));
 
         // Then
         assertThat(updated)
@@ -102,8 +102,8 @@ public class NoteRepositoryTest {
     @Test
     public void shouldNotUpdateNoteWhenNotOwnedByUser() {
         // Given
-        Note note1 = noteRepository.createNote(1, new Note("name1", "text1"));
-        Note note2 = noteRepository.createNote(2, new Note("name2", "text2"));
+        Note note1 = noteRepository.createNote(1, new Note("text1"));
+        Note note2 = noteRepository.createNote(2, new Note("text2"));
 
         // When
         Throwable thrown = catchThrowable(() -> noteRepository.updateNote(2, note1.getId(), new Note()));

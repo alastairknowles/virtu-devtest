@@ -1,5 +1,7 @@
 package com.thevirtugroup.postitnote.service;
 
+import static com.thevirtugroup.postitnote.Constants.DEFAULT_USER_ID;
+
 import com.thevirtugroup.postitnote.model.Note;
 import com.thevirtugroup.postitnote.model.Notes;
 import com.thevirtugroup.postitnote.repository.NoteRepository;
@@ -7,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,12 @@ public class NoteService {
     @Autowired
     public NoteService(NoteRepository noteRepository) {
         this.noteRepository = noteRepository;
+    }
+
+    @PostConstruct
+    public void populateDemoNotes() {
+        noteRepository.createNote(DEFAULT_USER_ID, new Note("Note 1"));
+        noteRepository.createNote(DEFAULT_USER_ID, new Note("Note 2"));
     }
 
     public Note createNote(long userId, Note note) {

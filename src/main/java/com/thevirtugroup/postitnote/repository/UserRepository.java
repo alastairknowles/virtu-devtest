@@ -1,5 +1,9 @@
 package com.thevirtugroup.postitnote.repository;
 
+import static com.thevirtugroup.postitnote.Constants.DEFAULT_USER_ID;
+import static com.thevirtugroup.postitnote.Constants.DEFAULT_USER_PASSWORD;
+import static com.thevirtugroup.postitnote.Constants.DEFAULT_USER_USERNAME;
+
 import com.thevirtugroup.postitnote.model.User;
 import org.springframework.stereotype.Repository;
 
@@ -10,14 +14,13 @@ public class UserRepository {
 
     public UserRepository() {
         defaultUser = new User();
-        defaultUser.setId(999L);
-        defaultUser.setName("Johnny Tango");
-        defaultUser.setPassword("password");
-        defaultUser.setUsername("user");
+        defaultUser.setId(DEFAULT_USER_ID);
+        defaultUser.setPassword(DEFAULT_USER_PASSWORD);
+        defaultUser.setUsername(DEFAULT_USER_USERNAME);
     }
 
     public User findUserByUsername(String username) {
-        if ("user".equals(username)) {
+        if (DEFAULT_USER_USERNAME.equals(username)) {
             return defaultUser;
         }
         return null;

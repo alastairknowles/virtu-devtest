@@ -1,5 +1,8 @@
 package com.thevirtugroup.postitnote.rest;
 
+import static com.thevirtugroup.postitnote.Constants.DEFAULT_USER_ID;
+import static com.thevirtugroup.postitnote.Constants.DEFAULT_USER_PASSWORD;
+import static com.thevirtugroup.postitnote.Constants.DEFAULT_USER_USERNAME;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -63,25 +66,25 @@ public class NoteControllerTest {
     @Test
     public void shouldCreateNote() throws Exception {
         // Given
-        Note note = new Note("name", "test");
+        Note note = new Note("test");
 
         // When
         ResultActions resultActions =
                 mockMvc.perform(
                         post("/api/notes")
-                                .with(httpBasic("user", "password"))
+                                .with(httpBasic(DEFAULT_USER_USERNAME, DEFAULT_USER_PASSWORD))
                                 .contentType(APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(note)));
 
         // Then
         resultActions.andExpect(status().isOk());
-        verify(noteService).createNote(999, note);
+        verify(noteService).createNote(DEFAULT_USER_ID, note);
     }
 
     @Test
     public void shouldNotCreateNoteWhenNotAuthenticated() throws Exception {
         // Given
-        Note note = new Note("name", "test");
+        Note note = new Note("test");
 
         // When
         ResultActions resultActions =
@@ -97,19 +100,19 @@ public class NoteControllerTest {
     @Test
     public void shouldGetNotes() throws Exception {
         // Given
-        Notes notes = new Notes(new Note("name", "test"));
-        when(noteService.getNotes(999)).thenReturn(notes);
+        Notes notes = new Notes(new Note("test"));
+        when(noteService.getNotes(DEFAULT_USER_ID)).thenReturn(notes);
 
         // When
         ResultActions resultActions =
                 mockMvc.perform(
                         get("/api/notes")
-                                .with(httpBasic("user", "password")));
+                                .with(httpBasic(DEFAULT_USER_USERNAME, DEFAULT_USER_PASSWORD)));
 
         // Then
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(content().string(objectMapper.writeValueAsString(notes)));
-        verify(noteService).getNotes(999);
+        verify(noteService).getNotes(DEFAULT_USER_ID);
     }
 
     @Test
@@ -126,25 +129,25 @@ public class NoteControllerTest {
     @Test
     public void shouldUpdateNote() throws Exception {
         // Given
-        Note update = new Note("name", "test");
+        Note update = new Note("test");
 
         // When
         ResultActions resultActions =
                 mockMvc.perform(
                         put("/api/notes/0e57460d-7187-4675-a270-e243e574f387")
-                                .with(httpBasic("user", "password"))
+                                .with(httpBasic(DEFAULT_USER_USERNAME, DEFAULT_USER_PASSWORD))
                                 .contentType(APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(update)));
 
         // Then
         resultActions.andExpect(status().isOk());
-        verify(noteService).updateNote(999, UUID.fromString("0e57460d-7187-4675-a270-e243e574f387"), update);
+        verify(noteService).updateNote(DEFAULT_USER_ID, UUID.fromString("0e57460d-7187-4675-a270-e243e574f387"), update);
     }
 
     @Test
     public void shouldUpdateNoteWhenNotAuthenticated() throws Exception {
         // Given
-        Note update = new Note("name", "test");
+        Note update = new Note("test");
 
         // When
         ResultActions resultActions =

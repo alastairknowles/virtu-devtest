@@ -41,7 +41,6 @@ public class NoteRepository {
                 throw new NotFoundException(Note.class, noteId);
             }
 
-            value.setName(update.getName());
             value.setText(update.getText());
             value.setUpdatedTimestamp(now());
             return value;

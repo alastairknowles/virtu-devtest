@@ -23,7 +23,7 @@
         function ($rootScope, $location, $sessionStorage, AuthService) {
             $rootScope.$on('$routeChangeStart', function (event) {
 
-                if ($location.path() === "/login") {
+                if ($location.path() === '/login') {
                     return;
                 }
 
@@ -46,7 +46,7 @@
 
     app.service('AuthService', function ($http, $sessionStorage) {
         function login(username, password) {
-            return $http.post("api/login",
+            return $http.post('api/login',
                 {username: username, password: password}).then(function (user) {
                 $sessionStorage.loggedUser = user;
             }, function (error) {
@@ -63,10 +63,41 @@
             return $sessionStorage.loggedUser != null;
         }
 
+        function basicAuth() {
+            let user = $sessionStorage.loggedUser;
+            return window.btoa('Basic ' + user.username + ':' + user.password)
+        }
+
         return {
             login: login,
             logout: logout,
-            isLoggedIn: isLoggedIn
+            isLoggedIn: isLoggedIn,
+            basicAuth: basicAuth
+        }
+    });
+
+    app.service('NoteService', function ($http, AuthService) {
+        function createNote(note) {
+            return $http.post('api/notes', note, {
+                headers: {'Authorization': AuthService.basicAuth()}
+            })
+        }
+
+        function getNotes() {
+            return $http.get('api/notes',
+                {headers: {'Authorization': AuthService.basicAuth()}})
+        }
+
+        function updateNote(note) {
+            return $http.put('api/notes/' + note.id, note, {
+                headers: {'Authorization': AuthService.basicAuth()}
+            })
+        }
+
+        return {
+            createNote: createNote,
+            getNotes: getNotes,
+            updateNote: updateNote
         }
     });
 
@@ -83,7 +114,7 @@
                 AuthService.login($scope.login.username,
                     $scope.login.password).then(function (user) {
                     console.log(user);
-                    $location.path("/");
+                    $location.path('/');
                 }, function (error) {
                     console.log(error);
                     $scope.invalidCreds = true;
@@ -91,24 +122,40 @@
             };
         });
 
-    app.controller('notesController', function ($scope) {
+    app.controller('notesController',
+        function ($scope, AuthService, NoteService) {
+            NoteService.getNotes().then(function (response) {
+                $scope.notes = response.data.items
+            })
 
-        $scope.isEditCreateView = false;
+            $scope.isEditCreateView = false;
 
-        $scope.newNoteView = function () {
-            $scope.isEditCreateView = true;
-        };
+            $scope.newNoteView = function () {
+                $scope.note = {}
+                $scope.isEditCreateView = true;
+            };
 
-        $scope.deleteNote = function (i) {
-            let prompt = confirm("Are you sure you want to delete this note?");
-            if (prompt) {
-                //TODO delete the note
+            $scope.viewNote = function (note) {
+                $scope.note = note;
+                $scope.isEditCreateView = true;
             }
-        };
 
-        $scope.viewNote = function () {
-            //TODO
-        }
-    });
+            $scope.cancelEditCreate = function () {
+                $scope.note = null;
+                $scope.isEditCreateView = false;
+            }
+
+            $scope.editCreate = function (note) {
+                (note.id
+                    ? NoteService.updateNote(note)
+                    : NoteService.createNote(note))
+                .then(function (ignore) {
+                    return NoteService.getNotes()
+                })
+                .then(function (response) {
+                    $scope.notes = response.data.items
+                })
+            }
+        });
 
 })();

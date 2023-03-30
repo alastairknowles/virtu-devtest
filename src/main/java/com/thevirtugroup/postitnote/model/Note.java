@@ -9,8 +9,6 @@ public class Note {
 
     private UUID id;
 
-    private String name;
-
     private String text;
 
     private Instant createdTimestamp;
@@ -25,8 +23,7 @@ public class Note {
         this.id = id;
     }
 
-    public Note(String name, String text) {
-        this.name = name;
+    public Note(String text) {
         this.text = text;
     }
 
@@ -36,14 +33,6 @@ public class Note {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getText() {
@@ -84,7 +73,6 @@ public class Note {
 
         return new EqualsBuilder()
                 .append(id, note.id)
-                .append(name, note.name)
                 .append(text, note.text)
                 .append(createdTimestamp, note.createdTimestamp)
                 .append(updatedTimestamp, note.updatedTimestamp)
@@ -95,7 +83,6 @@ public class Note {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(name)
                 .append(text)
                 .append(createdTimestamp)
                 .append(updatedTimestamp)
