@@ -9,3 +9,4 @@
   * Understanding the unusual security configuration.
 * None of the above would be too much trouble for business as usual development but for an aptitude test it is too much.
 * My guess is that this codebase might be reflective of the production codebase, which raises alarm bells. It would require modernisation as a matter of some urgency, to ensure that it continues to be possible to hire good engineers to work on it. I would want to understand how well the business understands this problem, should I asked be asked to attend a further interview.
+* There was not time to write tests for the angular layer. I would like to have explored this.
