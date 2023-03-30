@@ -39,9 +39,7 @@ public class NoteService {
                 .descendingIterator()
                 .forEachRemaining(items::add);
 
-        Notes notes = new Notes();
-        notes.setItems(items);
-        return notes;
+        return new Notes(items);
     }
 
     public Note updateNote(long userId, UUID noteId, Note update) {

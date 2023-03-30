@@ -16,10 +16,15 @@ public class Notes {
         this.items = asList(items);
     }
 
+    public Notes(List<Note> items) {
+        this.items = items;
+    }
+
     public List<Note> getItems() {
         return items;
     }
 
+    @SuppressWarnings("unused")
     public void setItems(List<Note> items) {
         this.items = items;
     }

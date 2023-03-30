@@ -3,6 +3,7 @@ package com.thevirtugroup.postitnote.rest;
 import static com.thevirtugroup.postitnote.Constants.DEFAULT_USER_ID;
 import static com.thevirtugroup.postitnote.Constants.DEFAULT_USER_PASSWORD;
 import static com.thevirtugroup.postitnote.Constants.DEFAULT_USER_USERNAME;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -52,6 +53,7 @@ public class NoteControllerTest {
 
     @Before
     public void setUp() {
+        reset(noteService);
         mockMvc =
                 webAppContextSetup(webApplicationContext)
                         .apply(springSecurity())
@@ -145,7 +147,7 @@ public class NoteControllerTest {
     }
 
     @Test
-    public void shouldUpdateNoteWhenNotAuthenticated() throws Exception {
+    public void shouldNotUpdateNoteWhenNotAuthenticated() throws Exception {
         // Given
         Note update = new Note("test");
 
