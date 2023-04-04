@@ -84,8 +84,9 @@
         }
 
         function getNotes() {
-            return $http.get('api/notes',
-                {headers: {'Authorization': AuthService.basicAuth()}})
+            return $http.get('api/notes', {
+                headers: {'Authorization': AuthService.basicAuth()}
+            })
         }
 
         function updateNote(note) {
@@ -149,7 +150,8 @@
                 (note.id
                     ? NoteService.updateNote(note)
                     : NoteService.createNote(note))
-                .then(function (ignore) {
+                .then(function (response) {
+                    $scope.note = response.data
                     return NoteService.getNotes()
                 })
                 .then(function (response) {
