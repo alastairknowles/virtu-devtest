@@ -151,7 +151,7 @@
                     ? NoteService.updateNote(note)
                     : NoteService.createNote(note))
                 .then(function (response) {
-                    $scope.note = response.data
+                    $scope.note.id = response.data.id
                     return NoteService.getNotes()
                 })
                 .then(function (response) {
